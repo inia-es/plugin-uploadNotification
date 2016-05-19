@@ -26,6 +26,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 	function getName() {
 		return 'UploadNotificationPlugin';
 	}
+
 	/**
 	 * Get the display name of this plugin
 	 * @return string
@@ -53,8 +54,6 @@ class UploadNotificationPlugin extends GenericPlugin {
 		return false;
 	}
 
-	
-
 	/**
 	 * Callback function run when an author upload a new version of an
 	 * article. It sends a notification email to the author and to the 
@@ -64,33 +63,30 @@ class UploadNotificationPlugin extends GenericPlugin {
 	 */
 	function notification($hookName, $args) {
 		
-        $submission = & $args[0];
-        $articleTitle = $submission->getArticleTitle();
-        $articleId =  $submission->getArticleId();
+		$submission = & $args[0];
+		$articleTitle = $submission->getArticleTitle();
+		$articleId =  $submission->getArticleId();
 
-	  import('classes.mail.ArticleMailTemplate');
+		import('classes.mail.ArticleMailTemplate');
 
 		$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
 		$user =& Request::getUser();
 		$email->setFrom($user->getEmail(), $user->getFullName());
 			 
-                $email->addRecipient($user->getEmail(), $user->getFullName());
- //              $email->ccAssignedEditors($articleId);
-                 $email->toAssignedEditingSectionEditors($articleId);
-               $paramArray = array(
-//			'articleId' => $articleId,
-				'articleTitle' => $articleTitle
-				);
+		$email->addRecipient($user->getEmail(), $user->getFullName());
+		$email->toAssignedEditingSectionEditors($articleId);
+		$paramArray = array(
+			'articleTitle' => $articleTitle
+		);
 
-			$email->sendWithParams($paramArray);
-                
- 		if ( !$email->hasErrors()) {
+		$email->sendWithParams($paramArray);
+
+		if (!$email->hasErrors()) {
 		
 		}
-//			exit("exit hook");
 
 		return false;
-	 }	
+	}
 
 }
 ?>
