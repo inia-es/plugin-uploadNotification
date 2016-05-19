@@ -1,15 +1,16 @@
 <?php
 
 /**
- * @file WebFeedPlugin.inc.php
+ * @file UploadNotificationPlugin.inc.php
  *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * Copyright (c) 2003-2016 Instituto Nacional de Investigación y Tecnología
+ *               Agraria y Alimentaria
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
- * @class WebFeedPlugin
- * @ingroup plugins_block_webFeed
+ * @class UploadNotificationPlugin
+ * @ingroup plugins_generic_uploadNotification
  *
- * @brief Web Feeds plugin class
+ * @brief Upload Notifications plugin class
  */
 
 // $Id$
@@ -55,9 +56,9 @@ class UploadNotificationPlugin extends GenericPlugin {
 	
 
 	/**
-	 * Register as a block plugin, even though this is a generic plugin.
-	 * This will allow the plugin to behave as a block plugin, i.e. to
-	 * have layout tasks performed on it.
+	 * Callback function run when an author upload a new version of an
+	 * article. It sends a notification email to the author and to the 
+	 * journal manager.
 	 * @param $hookName string
 	 * @param $args array
 	 */
