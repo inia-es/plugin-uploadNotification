@@ -88,5 +88,23 @@ class UploadNotificationPlugin extends GenericPlugin {
 		return false;
 	}
 
+	function getManagementVerbs() {
+		$verbs = parent::getManagementVerbs();
+		$verbs[] = array('settings', Locale::translate('plugins.generic.uploadNotifications.settings'));
+		return $verbs;
+	}
+
+	function manage($verb, $args) {
+		if (!parent::manage($verb, $args)) {
+			switch ($verb) {
+				case 'settings':
+					break;
+				default:
+					return false;
+			}
+		}
+		return true;
+	}
+
 }
 ?>
