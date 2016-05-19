@@ -1,15 +1,16 @@
 <?php
 
 /**
- * @file WebFeedPlugin.inc.php
+ * @file UploadNotificationPlugin.inc.php
  *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * Copyright (c) 2003-2016 Instituto Nacional de Investigación y Tecnología
+ *               Agraria y Alimentaria
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
  *
- * @class WebFeedPlugin
- * @ingroup plugins_block_webFeed
+ * @class UploadNotificationPlugin
+ * @ingroup plugins_generic_uploadNotification
  *
- * @brief Web Feeds plugin class
+ * @brief Upload Notifications plugin class
  */
 
 // $Id$
@@ -25,6 +26,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 	function getName() {
 		return 'UploadNotificationPlugin';
 	}
+
 	/**
 	 * Get the display name of this plugin
 	 * @return string
@@ -52,44 +54,39 @@ class UploadNotificationPlugin extends GenericPlugin {
 		return false;
 	}
 
-	
-
 	/**
-	 * Register as a block plugin, even though this is a generic plugin.
-	 * This will allow the plugin to behave as a block plugin, i.e. to
-	 * have layout tasks performed on it.
+	 * Callback function run when an author upload a new version of an
+	 * article. It sends a notification email to the author and to the 
+	 * journal manager.
 	 * @param $hookName string
 	 * @param $args array
 	 */
 	function notification($hookName, $args) {
 		
-        $submission = & $args[0];
-        $articleTitle = $submission->getArticleTitle();
-        $articleId =  $submission->getArticleId();
+		$submission = & $args[0];
+		$articleTitle = $submission->getArticleTitle();
+		$articleId =  $submission->getArticleId();
 
-	  import('classes.mail.ArticleMailTemplate');
+		import('classes.mail.ArticleMailTemplate');
 
 		$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
 		$user =& Request::getUser();
 		$email->setFrom($user->getEmail(), $user->getFullName());
 			 
-                $email->addRecipient($user->getEmail(), $user->getFullName());
- //              $email->ccAssignedEditors($articleId);
-                 $email->toAssignedEditingSectionEditors($articleId);
-               $paramArray = array(
-//			'articleId' => $articleId,
-				'articleTitle' => $articleTitle
-				);
+		$email->addRecipient($user->getEmail(), $user->getFullName());
+		$email->toAssignedEditingSectionEditors($articleId);
+		$paramArray = array(
+			'articleTitle' => $articleTitle
+		);
 
-			$email->sendWithParams($paramArray);
-                
- 		if ( !$email->hasErrors()) {
+		$email->sendWithParams($paramArray);
+
+		if (!$email->hasErrors()) {
 		
 		}
-//			exit("exit hook");
 
 		return false;
-	 }	
+	}
 
 }
 ?>
