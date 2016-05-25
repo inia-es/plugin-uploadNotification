@@ -43,6 +43,15 @@ class UploadNotificationPlugin extends GenericPlugin {
 		return __('plugins.generic.uploadNotifications.description');
 	}
 
+	/**
+	 * Get the name of the settings file to be installed on new journal
+	 * creation.
+	 * @return string
+	 */
+	function getContextSpecificPluginSettingsFile() {
+		return $this->getPluginPath() . '/settings.xml';
+	}
+
 	function register($category, $path) {
 		if (parent::register($category, $path)) {
 			Registry::set( 'UploadNotificationPlugin', $this );
