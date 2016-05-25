@@ -32,7 +32,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	function getDisplayName() {
-		return 'UploadNotification Plugin';
+		return __('plugins.generic.uploadNotifications.displayName');
 	}
 
 	/**
@@ -40,7 +40,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	function getDescription() {
-		return 'This plugin send email to editor when Author upload new revision ';
+		return __('plugins.generic.uploadNotifications.description');
 	}
 
 	function register($category, $path) {

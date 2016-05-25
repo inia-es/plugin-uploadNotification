@@ -12,6 +12,8 @@
   -->
  
 <locale name="en_US" full_name="U.S. English">
+	<message key="plugins.generic.uploadNotifications.displayName">Upload Notifications Plugin</message>
+	<message key="plugins.generic.uploadNotifications.description">This plugin notifies author and other stakeholders when a new version of an article is uploaded.</message>
 
 	<message key="plugins.generic.uploadNotifications.settings">Settings</message>
 </locale>
