@@ -76,24 +76,33 @@ class UploadNotificationPlugin extends GenericPlugin {
 		$articleTitle = $submission->getArticleTitle();
 		$articleId =  $submission->getArticleId();
 
-		import('classes.mail.ArticleMailTemplate');
+		$currentJournal &= Request::getJournal();
+		$notifyAuthor = $this->getSetting($currentJournal->getJournalId(), 'notifyAuthor');
+		$notifyJournalContact = $this->getSetting($currentJournal->getJournalId(), 'notifyJournalContact');
 
-		$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
-		$user =& Request::getUser();
-		$email->setFrom($user->getEmail(), $user->getFullName());
-			 
-		$email->addRecipient($user->getEmail(), $user->getFullName());
-		$email->toAssignedEditingSectionEditors($articleId);
-		$paramArray = array(
-			'articleTitle' => $articleTitle
-		);
+		if ($notifyAuthor || $notifyJournalContact) {
 
-		$email->sendWithParams($paramArray);
+			import('classes.mail.ArticleMailTemplate');
 
-		if (!$email->hasErrors()) {
+			$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
+			$user =& Request::getUser();
+			$email->setFrom($user->getEmail(), $user->getFullName());
+			if ($notifyAuthor) { 
+				$email->addRecipient($user->getEmail(), $user->getFullName());
+			}
+			if ($notifyJournalContact) {
+				$email->addRecipient($currentJournal->getSetting('contactEmail'), $currentJournal->getSetting('contactName'));
+			}
+			$paramArray = array(
+				'articleTitle' => $articleTitle
+			);
+
+			$email->sendWithParams($paramArray);
+
+			if (!$email->hasErrors()) {
 		
+			}
 		}
-
 		return false;
 	}
 
