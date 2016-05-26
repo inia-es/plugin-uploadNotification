@@ -76,7 +76,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 		$articleTitle = $submission->getArticleTitle();
 		$articleId =  $submission->getArticleId();
 
-		$currentJournal &= Request::getJournal();
+		$currentJournal =& Request::getJournal();
 		$notifyAuthor = $this->getSetting($currentJournal->getJournalId(), 'notifyAuthor');
 		$notifyJournalContact = $this->getSetting($currentJournal->getJournalId(), 'notifyJournalContact');
 
@@ -116,7 +116,24 @@ class UploadNotificationPlugin extends GenericPlugin {
 		if (!parent::manage($verb, $args)) {
 			switch ($verb) {
 				case 'settings':
-					break;
+					$journal =& Request::getJournal();
+					$this->import('SettingsForm');
+					$form = new SettingsForm($this, $journal->getId());
+
+					if (Request::getUserVar('save')) {
+						$form->readInputData();
+						if ($form->validate()) {
+							$form->execute();
+							Request::redirect(null, null, 'plugins');
+							return false;
+						} else {
+							$form->display();
+						}
+					} else {
+						$form->initData();
+						$form->display();
+					}
+					return true;
 				default:
 					return false;
 			}

@@ -16,4 +16,9 @@
 	<message key="plugins.generic.uploadNotifications.description">This plugin notifies author and other stakeholders when a new version of an article is uploaded.</message>
 
 	<message key="plugins.generic.uploadNotifications.settings">Settings</message>
+
+	<message key="plugins.generic.uploadNotifications.settings.notifyAuthor">Notify user on version upload</message>
+	<message key="plugins.generic.uploadNotifications.settings.dontNotifyAuthor">Don't notify user on version upload</message>
+	<message key="plugins.generic.uploadNotifications.settings.notifyJournalContact">Notify journal contact on version upload</message>
+	<message key="plugins.generic.uploadNotifications.settings.dontNotifyJournalContact">Don't notify journal contact on version upload</message>
 </locale>
