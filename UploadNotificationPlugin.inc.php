@@ -125,7 +125,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 					$form->readInputData();
 					if ($form->validate()) {
 						$form->execute();
-						Request::redirect(null, null, 'plugins');
+						Request::redirect(null, null, 'plugins/generic');
 						return false;
 					} else {
 						$form->display();
