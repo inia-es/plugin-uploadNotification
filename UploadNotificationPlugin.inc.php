@@ -112,31 +112,31 @@ class UploadNotificationPlugin extends GenericPlugin {
 		return $verbs;
 	}
 
-	function manage($verb, $args) {
-		if (!parent::manage($verb, $args)) {
-			switch ($verb) {
-				case 'settings':
-					$journal =& Request::getJournal();
-					$this->import('SettingsForm');
-					$form = new SettingsForm($this, $journal->getId());
+	function manage($verb, $args, $message, $messageParams) {
+		if (!parent::manage($verb, $args, $message, $messageParams)) 
+			return false;
+		switch ($verb) {
+			case 'settings':
+				$journal =& Request::getJournal();
+				$this->import('SettingsForm');
+				$form = new SettingsForm($this, $journal->getId());
 
-					if (Request::getUserVar('save')) {
-						$form->readInputData();
-						if ($form->validate()) {
-							$form->execute();
-							Request::redirect(null, null, 'plugins');
-							return false;
-						} else {
-							$form->display();
-						}
+				if (Request::getUserVar('save')) {
+					$form->readInputData();
+					if ($form->validate()) {
+						$form->execute();
+						Request::redirect(null, null, 'plugins');
+						return false;
 					} else {
-						$form->initData();
 						$form->display();
 					}
-					return true;
-				default:
-					return false;
-			}
+				} else {
+					$form->initData();
+					$form->display();
+				}
+				return true;
+			default:
+				return false;
 		}
 		return true;
 	}
