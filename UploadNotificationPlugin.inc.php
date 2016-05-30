@@ -32,7 +32,7 @@ class UploadNotificationPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	function getDisplayName() {
-		return 'UploadNotification Plugin';
+		return __('plugins.generic.uploadNotifications.displayName');
 	}
 
 	/**
@@ -40,7 +40,16 @@ class UploadNotificationPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	function getDescription() {
-		return 'This plugin send email to editor when Author upload new revision ';
+		return __('plugins.generic.uploadNotifications.description');
+	}
+
+	/**
+	 * Get the name of the settings file to be installed on new journal
+	 * creation.
+	 * @return string
+	 */
+	function getContextSpecificPluginSettingsFile() {
+		return $this->getPluginPath() . '/settings.xml';
 	}
 
 	function register($category, $path) {
@@ -67,25 +76,69 @@ class UploadNotificationPlugin extends GenericPlugin {
 		$articleTitle = $submission->getArticleTitle();
 		$articleId =  $submission->getArticleId();
 
-		import('classes.mail.ArticleMailTemplate');
+		$currentJournal =& Request::getJournal();
+		$notifyAuthor = $this->getSetting($currentJournal->getJournalId(), 'notifyAuthor');
+		$notifyJournalContact = $this->getSetting($currentJournal->getJournalId(), 'notifyJournalContact');
 
-		$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
-		$user =& Request::getUser();
-		$email->setFrom($user->getEmail(), $user->getFullName());
-			 
-		$email->addRecipient($user->getEmail(), $user->getFullName());
-		$email->toAssignedEditingSectionEditors($articleId);
-		$paramArray = array(
-			'articleTitle' => $articleTitle
-		);
+		if ($notifyAuthor || $notifyJournalContact) {
 
-		$email->sendWithParams($paramArray);
+			import('classes.mail.ArticleMailTemplate');
 
-		if (!$email->hasErrors()) {
+			$email = new ArticleMailTemplate($submission,'UPLOAD_NOTIFICATION');
+			$user =& Request::getUser();
+			$email->setFrom($user->getEmail(), $user->getFullName());
+			if ($notifyAuthor) { 
+				$email->addRecipient($user->getEmail(), $user->getFullName());
+			}
+			if ($notifyJournalContact) {
+				$email->addRecipient($currentJournal->getSetting('contactEmail'), $currentJournal->getSetting('contactName'));
+			}
+			$paramArray = array(
+				'articleTitle' => $articleTitle
+			);
+
+			$email->sendWithParams($paramArray);
+
+			if (!$email->hasErrors()) {
 		
+			}
 		}
-
 		return false;
+	}
+
+	function getManagementVerbs() {
+		$verbs = parent::getManagementVerbs();
+		$verbs[] = array('settings', Locale::translate('plugins.generic.uploadNotifications.settings'));
+		return $verbs;
+	}
+
+	function manage($verb, $args, $message, $messageParams) {
+		if (!parent::manage($verb, $args, $message, $messageParams)) 
+			return false;
+		switch ($verb) {
+			case 'settings':
+				$journal =& Request::getJournal();
+				$this->import('SettingsForm');
+				$form = new SettingsForm($this, $journal->getId());
+
+				if (Request::getUserVar('save')) {
+					$form->readInputData();
+					if ($form->validate()) {
+						$form->execute();
+						Request::redirect(null, null, 'plugins', 'generic');
+						return false;
+					} else {
+						$form->display();
+					}
+				} else {
+					$form->initData();
+					$form->display();
+				}
+				return true;
+			default:
+				return false;
+		}
+		return true;
 	}
 
 }
