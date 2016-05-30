@@ -25,24 +25,23 @@
 <label for="notifyAuthor-yes">
 	{translate key="plugins.generic.uploadNotifications.settings.notifyAuthor"}
 </label>
-<input type="radio" name="notifyAuthor" id="notifyAuthor-yes" value="true" {if $notifyAuthor}checked="checked" {/if}/>
-
+<input type="radio" name="notifyAuthor" id="notifyAuthor-yes" value="true" {if $notifyAuthor eq "true"}checked="checked" {/if}/>
+<br/>
 <label for="notifyAuthor-no">
 	{translate key="plugins.generic.uploadNotifications.settings.dontNotifyAuthor"}
 </label>
-<input type="radio" name="notifyAuthor" id="notifyAuthor-no" value="false" {if not $notifyAuthor}checked="checked" {/if}/>
-
+<input type="radio" name="notifyAuthor" id="notifyAuthor-no" value="false" {if $notifyAuthor neq "true"}checked="checked" {/if}/>
 <div class="separator"></div>
 
 <label for="notifyJournalContact-yes">
 	{translate key="plugins.generic.uploadNotifications.settings.notifyJournalContact"}
 </label>
-<input type="radio" name="notifyJournalContact" id="notifyJournalContact-yes" value="true" {if $notifyJournalContact}checked="checked" {/if}/>
-
+<input type="radio" name="notifyJournalContact" id="notifyJournalContact-yes" value="true" {if $notifyJournalContact eq "true"}checked="checked" {/if}/>
+<br/>
 <label for="notifyJournalContact-no">
 	{translate key="plugins.generic.uploadNotifications.settings.dontNotifyJournalContact"}
 </label>
-<input type="radio" name="notifyJournalContact" id="norifyJournalContact-no" value="false" {if not $notifyJournalContact}checked="checked" {/if}/>
+<input type="radio" name="notifyJournalContact" id="notifyJournalContact-no" value="false" {if $notifyJournalContact neq "true"}checked="checked" {/if}/>
 
 <br/>
 
